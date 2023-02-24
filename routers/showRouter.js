@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {Show} = require('../models/index');
-const {sequelize} = require('../db');
+const {db} = require('../db');
 const {check, validationResult} = require("express-validator");
 
 // GET all shows

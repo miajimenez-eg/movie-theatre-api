@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {User} = require('../models/index');
 const {Show} = require('../models/index');
-const {sequelize} = require('../db');
+const {db} = require('../db');
 const {check, validationResult} = require("express-validator");
 
 // GET all users
@@ -19,7 +19,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // GET all shows watched by a user (user id in req.params)
-router.get('/:id', async (req, res) => {
+router.get('/shows/:id', async (req, res) => {
     const id = req.params.id;
     const getShows = await Show.findAll({ where: { userId: id } });
     res.json(getShows);
@@ -30,9 +30,10 @@ router.get('/:id', async (req, res) => {
 router.put('/:id/shows/:showId', async (req, res) => {
     const id = req.params.id;
     const showId = req.params.showId;
-    const show = req.body;
+    const shows = req.body;
     const user = await User.findByPk(id);
-    const updateShow = await User.getShows({ where: { id: showId } });
+    const show = await Show.findByPk(showId);
+    show.userId = id;
     await user.addShow(show);
     res.json(user);
 })

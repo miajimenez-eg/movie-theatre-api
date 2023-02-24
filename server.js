@@ -1,4 +1,4 @@
-const {sequelize} = require('./db');
+const {db} = require('./db');
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -10,6 +10,6 @@ app.use('/users', user);
 app.use('/shows', show);
 
 app.listen(port, () => {
-    sequelize.sync();
+    db.sync();
     console.log(`Listening on port ${port}`);
 })
