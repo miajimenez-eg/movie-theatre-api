@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     res.json(allUsers);
 })
 
-// GET one user
+// GET one users
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
     const getUser = await User.findByPk(id);
@@ -19,7 +19,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // GET all shows watched by a user (user id in req.params)
-router.get('/shows/:id', async (req, res) => {
+router.get('/:id/shows', async (req, res) => {
     const id = req.params.id;
     const getShows = await Show.findAll({ where: { userId: id } });
     res.json(getShows);
@@ -30,12 +30,16 @@ router.get('/shows/:id', async (req, res) => {
 router.put('/:id/shows/:showId', async (req, res) => {
     const id = req.params.id;
     const showId = req.params.showId;
-    const shows = req.body;
-    const user = await User.findByPk(id);
     const show = await Show.findByPk(showId);
-    show.userId = id;
-    await user.addShow(show);
-    res.json(user);
+    const user = await User.findByPk(id);
+    await user.addShow(show)
+    const updatedUser = await User.findAll(
+        {
+            where: { id: id },
+            include: Show
+        }
+    );
+    res.json(updatedUser);
 })
 
 module.exports = router;
